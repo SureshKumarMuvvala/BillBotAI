@@ -28,6 +28,8 @@ from typing import Dict, Any
 import requests
 from PIL import Image
 
+from .chandra_poll import poll_until_complete, DatalabAPIError
+
 logger = logging.getLogger(__name__)
 
 BASE_URL = "https://www.datalab.to/api/v1"
@@ -37,11 +39,6 @@ CONVERT_MODE   = "accurate"
 OUTPUT_FORMAT  = "json"
 POLL_INTERVAL  = 3      # seconds
 TIMEOUT_SEC    = 180    # max wait
-
-
-# ── Shared exception ──────────────────────────────────────────────────────────
-class DatalabAPIError(Exception):
-    pass
 
 
 # ── Internal helpers (copied from notebook) ───────────────────────────────────
@@ -54,35 +51,6 @@ def _to_jpeg(raw_bytes: bytes, filename: str) -> bytes:
         return buf.getvalue()
     except Exception as e:
         raise DatalabAPIError(f"Cannot decode image '{filename}': {e}")
-
-
-def _poll_sync(check_url: str, headers: dict, timeout: int, interval: float) -> Dict[str, Any]:
-    """
-    Blocking poll loop — runs in a thread-pool executor so it does not block
-    the FastAPI event loop (see run_convert below).
-
-    Copied from notebook _poll(); print() replaced with logger.
-    """
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        try:
-            resp = requests.get(check_url, headers=headers, timeout=15)
-            if resp.status_code == 429:
-                raise DatalabAPIError("Rate limit exceeded (429). Please wait and retry.")
-            if resp.status_code != 200:
-                raise DatalabAPIError(f"Poll error [{resp.status_code}]: {resp.text[:200]}")
-            data   = resp.json()
-            status = data.get("status", "")
-            if status == "complete":
-                logger.info("convert poll → done ✅")
-                return data
-            elif status == "failed":
-                raise DatalabAPIError(f"Server extraction failed: {data.get('error', 'unknown')}")
-        except requests.exceptions.RequestException as e:
-            logger.warning("convert poll transient error: %s", e)
-        logger.debug("convert polling…")
-        time.sleep(interval)
-    raise DatalabAPIError(f"Timeout after {timeout}s waiting for convert result.")
 
 
 def _call_convert_sync(
@@ -120,7 +88,7 @@ def _call_convert_sync(
         raise DatalabAPIError("No request_check_url in convert submit response.")
 
     logger.info("[convert] Polling %s …", check_url)
-    return _poll_sync(check_url, headers, timeout, interval)
+    return poll_until_complete(check_url, headers, timeout, interval)
 
 
 # ── Public async entry-point ──────────────────────────────────────────────────

@@ -1,81 +1,88 @@
 import React from 'react';
-import { Layers, Activity, Clock } from 'lucide-react';
+import { Layers, Activity, Clock, Wifi } from 'lucide-react';
 import StepItem from './StepItem';
 
-export default function ProgressPanel({ steps }) {
-  // Determine if pipeline is currently active
-  const isRunning = steps.some(step => step.status === 'running');
+export default function ProgressPanel({ steps, isProcessing }) {
+  const isRunning   = steps.some(s => s.status === 'running');
   const isCompleted = steps[steps.length - 1].status === 'completed';
-  const hasFailed = steps.some(step => step.status === 'failed');
+  const hasFailed   = steps.some(s => s.status === 'failed');
+  const totalDuration = steps.reduce((acc, s) => acc + (s.duration || 0), 0);
 
-  const getStatusText = () => {
-    if (hasFailed) return 'PIPELINE FAILED';
-    if (isCompleted) return 'PIPELINE SUCCESSFUL';
-    if (isRunning) return 'PROCESSING CHANDRA PIPELINE...';
-    return 'STANDBY';
-  };
-
-  const getStatusStyle = () => {
-    if (hasFailed) return 'bg-rose-500/15 text-rose-400 border-rose-500/20';
-    if (isCompleted) return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20';
-    if (isRunning) return 'bg-cyan-500/15 text-cyan-400 border-cyan-400/20 animate-pulse';
-    return 'bg-slate-900 border-slate-800 text-slate-400';
-  };
-
-  // Calculate total pipeline duration
-  const totalDuration = steps.reduce((acc, step) => acc + (step.duration || 0), 0);
+  const statusLabel = hasFailed ? 'FAILED' : isCompleted ? 'COMPLETE' : isRunning ? 'RUNNING' : 'STANDBY';
+  const statusStyle = hasFailed
+    ? 'bg-rose-500/12 text-rose-400 border-rose-500/20'
+    : isCompleted
+      ? 'bg-emerald-500/12 text-emerald-400 border-emerald-500/20'
+      : isRunning
+        ? 'bg-cyan-500/12 text-cyan-400 border-cyan-400/20 animate-pulse'
+        : 'bg-slate-900/60 border-slate-800 text-slate-500';
 
   return (
-    <div className="glass-panel rounded-2xl p-6 glow-accent border border-white/5 relative overflow-hidden flex flex-col justify-between h-full min-h-[500px]">
-      {/* Background soft lighting grid */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
-      
-      <div>
-        {/* Header Block */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-900 mb-6">
-          <div className="flex items-center gap-2">
-            <Layers className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-base font-bold tracking-wide text-white">Pipeline Execution Telemetry</h2>
+    <div className="glass-panel rounded-2xl border border-white/6 relative overflow-hidden flex flex-col h-full min-h-[480px] transition-all duration-500 hover:border-white/10">
+      {/* Ambient top-right glow */}
+      <div className="absolute top-0 right-0 w-56 h-56 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+      {isRunning && (
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-cyan-500/60 to-transparent" />
+      )}
+
+      {/* ── Header ── */}
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white/5 shrink-0">
+        <div className="flex items-center gap-2.5">
+          <div className={`w-7 h-7 border rounded-lg flex items-center justify-center transition-all duration-300 ${
+            isRunning ? 'bg-cyan-500/15 border-cyan-400/30 glow-accent' : 'bg-slate-900/60 border-slate-700'
+          }`}>
+            <Layers className={`w-3.5 h-3.5 transition-colors duration-300 ${isRunning ? 'text-cyan-400' : 'text-slate-500'}`} />
           </div>
-          
-          <div className="flex items-center gap-3">
-            {totalDuration > 0 && (
-              <div className="flex items-center gap-1 text-[10px] font-mono text-slate-400 bg-slate-950/60 px-2 py-1 border border-white/5 rounded-lg">
-                <Clock className="w-3.5 h-3.5 text-slate-500" />
-                <span>Elapsed: {totalDuration}s</span>
-              </div>
-            )}
-            <span className={`text-[9px] font-mono font-bold tracking-wider px-2 py-1 rounded border ${getStatusStyle()}`}>
-              {getStatusText()}
-            </span>
+          <div>
+            <h2 className="text-sm font-semibold text-white tracking-tight">Pipeline Telemetry</h2>
+            <p className="text-[10px] text-slate-500 font-mono">Chandra V4 execution engine</p>
           </div>
         </div>
 
-        {/* Stepper Vertical Timeline */}
-        <div className="pl-2 pr-2 py-2 flex flex-col justify-start">
-          {steps.map((step, idx) => (
-            <StepItem
-              key={idx}
-              name={step.name}
-              status={step.status}
-              duration={step.duration}
-              description={step.description}
-              isLast={idx === steps.length - 1}
-            />
-          ))}
+        <div className="flex items-center gap-2">
+          {totalDuration > 0 && (
+            <div className="flex items-center gap-1 text-[10px] font-mono text-slate-500 bg-slate-950/50 px-2 py-1 rounded-lg border border-white/5">
+              <Clock className="w-3 h-3 text-slate-600" />
+              {totalDuration}s
+            </div>
+          )}
+          <span className={`text-[9px] font-mono font-bold tracking-widest px-2.5 py-1 rounded-lg border ${statusStyle}`}>
+            {statusLabel}
+          </span>
         </div>
       </div>
 
-      {/* Pipeline Status Indicator Card */}
-      <div className="mt-4 p-4 bg-slate-950/40 border border-slate-900 rounded-xl flex items-center justify-between text-xs">
+      {/* ── Stepper ── */}
+      <div className="flex-1 px-5 py-5 flex flex-col">
+        {steps.map((step, idx) => (
+          <StepItem
+            key={step.key}
+            name={step.name}
+            status={step.status}
+            duration={step.duration}
+            description={step.description}
+            isLast={idx === steps.length - 1}
+          />
+        ))}
+      </div>
+
+      {/* ── Footer status bar ── */}
+      <div className="px-5 py-3.5 border-t border-white/5 flex items-center justify-between text-[10px]">
         <div className="flex items-center gap-2 text-slate-400">
-          <Activity className={`w-4 h-4 text-cyan-400 ${isRunning ? 'animate-pulse' : ''}`} />
-          <span>Active State:</span>
-          <span className="font-semibold text-slate-200">
-            {isRunning ? 'Extracting layouts via Chandra' : isCompleted ? 'All steps finalized successfully' : 'Awaiting file upload'}
+          <Activity className={`w-3.5 h-3.5 ${isRunning ? 'text-cyan-400 animate-pulse' : 'text-slate-600'}`} />
+          <span className="text-slate-600">State:</span>
+          <span className="font-medium text-slate-300">
+            {isRunning
+              ? 'Extracting via Chandra OCR'
+              : isCompleted ? 'All steps finalized'
+              : hasFailed ? 'Pipeline encountered errors'
+              : 'Awaiting file upload'}
           </span>
         </div>
-        <span className="font-mono text-[10px] text-slate-500">Chandra V4 Engine</span>
+        <div className="flex items-center gap-1 text-slate-600 font-mono">
+          <Wifi className="w-3 h-3" />
+          <span>:8000</span>
+        </div>
       </div>
     </div>
   );

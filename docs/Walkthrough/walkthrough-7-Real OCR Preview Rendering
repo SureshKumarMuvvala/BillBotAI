@@ -1,0 +1,101 @@
+# Walkthrough — Real OCR Preview Rendering (Milestone 6)
+
+Live OCR data from the real Chandra pipeline now renders directly in the React frontend as soon as the pipeline completes.
+
+---
+
+## What Was Built
+
+### 1. Backend — `/results/{job_id}` endpoint ([main.py](file:///d:/BillBotAI/backend/main.py))
+
+Added a new `GET /results/{job_id}` endpoint that returns the complete structured job output:
+
+```json
+{
+  "job_id":        "...",
+  "filename":      "invoice.jpg",
+  "status":        "completed",
+  "line_items":    [ { "medicine_name": "...", "batch_no": "...", ... } ],
+  "quality_score": 4.2,
+  "ocr_markdown":  "# Invoice\n...",
+  "latency_sec":   12.4,
+  "item_count":    18,
+  "errors":        []
+}
+```
+
+Also updated the SSE pipeline to persist `ocr_markdown` from the convert result into the job store:
+```python
+job["ocr_markdown"] = convert_result.get("markdown", "")
+```
+
+---
+
+### 2. Frontend — `OCRResultsPanel.jsx` ([view](file:///d:/BillBotAI/frontend/src/components/OCRResultsPanel.jsx))
+
+A new full-width panel component with three sections:
+
+#### Summary Card (4 metrics)
+| Metric | Detail |
+|--------|--------|
+| **Line Items** | count of extracted rows, green when > 0 |
+| **Quality Score** | `/5` from Chandra convert API |
+| **Processing** | total pipeline latency in seconds |
+| **Status** | OK / Partial depending on errors |
+
+#### OCR Markdown Preview (collapsible)
+- Shows raw OCR markdown from the `/convert` endpoint
+- Collapsible via toggle button — defaults to first 800 chars
+- Monospace pre-formatted text in a scrollable container
+
+#### GRN Line Items Table
+All 10 schema columns with sticky header and scrollable body:
+
+| # | Medicine | Batch | Expiry | Qty | Free Qty | Rate | MRP | GST % | Amount | HSN |
+|---|----------|-------|--------|-----|----------|------|-----|-------|--------|-----|
+
+**Table features:**
+- Sticky `thead` — header stays visible while scrolling rows
+- Alternating row stripe (`bg-slate-900/20`)
+- Cyan hover highlight per row
+- Footer totals row for `Qty`, `Free Qty`, and `Amount` columns
+- Empty state with descriptive help text when no items are extracted
+- Responsive — horizontal scroll on small screens via `overflow-auto`
+
+---
+
+### 3. Frontend — `App.jsx` ([view](file:///d:/BillBotAI/frontend/src/App.jsx))
+
+- Added `ocrResults` state (`null` until pipeline finishes)
+- Added `fetchResults(job_id)` — calls `GET /results/{job_id}` with axios after the SSE `excel` step fires `"Finished"`
+- Layout restructured: upload + progress on top row, `OCRResultsPanel` full-width below
+- Clear resets `ocrResults` to `null` for a fresh state
+
+---
+
+## Live Screenshot — Empty State
+
+![OCR Results Panel](file:///C:/Users/Suresh%20Kumar/.gemini/antigravity/brain/f2372223-16c8-4dee-936e-5c2cffebe0ca/artifacts/ocr_results_panel.png)
+
+The empty-state placeholder is visible below the pipeline telemetry panel. Once you run a real invoice with a configured `CHANDRA_API_KEY`, the results panel will fill with:
+- The 4-metric summary card
+- Collapsible OCR markdown preview
+- Full 10-column line items table with sticky header
+
+---
+
+## How to Activate Real Data
+
+1. Add your Datalab API key to [.env](file:///d:/BillBotAI/.env):
+   ```
+   CHANDRA_API_KEY=your_real_key_here
+   ```
+2. Start the backend:
+   ```powershell
+   venv\Scripts\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
+   ```
+3. Start the frontend:
+   ```powershell
+   cmd /c "npm run dev"
+   ```
+4. Upload a pharmacy invoice image (JPG/PNG) and click **START CHANDRA EXTRACTION** — the results panel will populate automatically when the pipeline finishes.

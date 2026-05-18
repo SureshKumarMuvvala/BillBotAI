@@ -144,3 +144,7 @@ vite.config.ts.timestamp-*
 
 # Python Virtual Environment
 venv/
+
+#Input and Output
+Excel Downloads/
+invoices/

@@ -23,6 +23,10 @@ from typing import Dict
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 from backend.services.chandra_convert  import run_convert, DatalabAPIError
 from backend.services.chandra_extract  import run_extract
@@ -86,6 +90,7 @@ async def upload_document(file: UploadFile = File(...)):
         "status":        "uploaded",
         "line_items":    [],
         "quality_score": None,
+        "ocr_markdown":  "",
         "latency_sec":   0.0,
         "errors":        [],
     }
@@ -134,8 +139,11 @@ async def get_progress_stream(job_id: str):
             convert_result = None
             quality_score  = None
             try:
+                if not api_key or api_key == "your_datalab_api_key_here":
+                    raise DatalabAPIError("CHANDRA_API_KEY is not configured in .env file.")
                 convert_result = await run_convert(img_bytes, filename, api_key)
                 quality_score  = compute_quality_score(convert_result)
+                job["ocr_markdown"] = convert_result.get("markdown", "")
                 score_str      = f"{quality_score}/5" if quality_score is not None else "—"
                 yield sse_event("convert", "completed",
                                 f"OCR conversion complete — quality score: {score_str}.")
@@ -150,6 +158,8 @@ async def get_progress_stream(job_id: str):
             extract_result = None
             line_items     = []
             try:
+                if not api_key or api_key == "your_datalab_api_key_here":
+                    raise DatalabAPIError("CHANDRA_API_KEY is not configured in .env file.")
                 extract_result = await run_extract(img_bytes, filename, api_key)
                 line_items     = get_line_items(extract_result)
                 yield sse_event("extract", "completed",
@@ -168,7 +178,7 @@ async def get_progress_stream(job_id: str):
             yield sse_event("excel", "running", "Compiling openpyxl workbook…")
             latency = time.time() - t_start
 
-            # Persist results into job store so /download can serve them
+            # Persist results into job store so /download and /results can serve them
             job["line_items"]    = line_items
             job["quality_score"] = quality_score
             job["latency_sec"]   = latency
@@ -214,6 +224,29 @@ async def download_excel(job_id: str):
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": f"attachment; filename={fname}"},
     )
+
+
+@app.get("/results/{job_id}")
+async def get_results(job_id: str):
+    """
+    Return structured OCR results for the frontend preview panel.
+    Available after pipeline completes (status == 'completed').
+    """
+    if job_id not in JOBS:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    job = JOBS[job_id]
+    return {
+        "job_id":        job_id,
+        "filename":      job["filename"],
+        "status":        job["status"],
+        "line_items":    job["line_items"],
+        "quality_score": job["quality_score"],
+        "ocr_markdown":  job.get("ocr_markdown", ""),
+        "latency_sec":   job["latency_sec"],
+        "item_count":    len(job["line_items"]),
+        "errors":        job["errors"],
+    }
 
 
 if __name__ == "__main__":

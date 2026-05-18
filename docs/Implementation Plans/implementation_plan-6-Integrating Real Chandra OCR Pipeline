@@ -1,0 +1,58 @@
+# Implementation Plan - Integrating Real Chandra OCR Pipeline
+
+This plan details the steps to verify the current status of the Chandra OCR backend implementation, perform clean refactoring of redundant parts, enforce secure environment variable configuration for API keys, and run the integration test suite.
+
+## User Review Required
+
+> [!IMPORTANT]
+> - We will refactor [chandra_convert.py](file:///d:/BillBotAI/backend/services/chandra_convert.py) to import the polling logic directly from [chandra_poll.py](file:///d:/BillBotAI/backend/services/chandra_poll.py), eliminating duplicate code.
+> - We will integrate `.env` environment variable loading inside the FastAPI entrypoint ([main.py](file:///d:/BillBotAI/backend/main.py)) so that `CHANDRA_API_KEY` is loaded seamlessly.
+> - We will validate the API key's presence at the start of the SSE stream, yielding a clear error step if it is missing, preventing silent or untrackable API failures.
+> - We will remove the unused legacy [ocr_service.py](file:///d:/BillBotAI/backend/services/ocr_service.py) and the [routes](file:///d:/BillBotAI/backend/routes/) directory to match the target pipeline structure perfectly.
+
+## Open Questions
+
+> [!NOTE]
+> No major blockers or open questions are outstanding as the existing backend implementation is already solid and aligned with the React frontend's network expectations. We only need to polish, refactor, and verify the stack.
+
+---
+
+## Proposed Changes
+
+### Backend Services Component
+
+#### [MODIFY] [chandra_convert.py](file:///d:/BillBotAI/backend/services/chandra_convert.py)
+- Import `poll_until_complete` and `DatalabAPIError` from `.chandra_poll`.
+- Remove redundant local definition of `class DatalabAPIError` and `_poll_sync()`.
+- Update `_call_convert_sync()` to call `poll_until_complete()`.
+
+#### [DELETE] [ocr_service.py](file:///d:/BillBotAI/backend/services/ocr_service.py)
+- Delete this legacy mock service file to align perfectly with the target `backend/services/` structure.
+
+#### [DELETE] [routes/](file:///d:/BillBotAI/backend/routes/)
+- Delete `backend/routes/ocr.py` and `backend/routes/__init__.py` as the active API on port 8000 routes everything directly in `backend/main.py` and does not reference them.
+
+---
+
+### Backend Main Application
+
+#### [MODIFY] [main.py](file:///d:/BillBotAI/backend/main.py)
+- Import `load_dotenv` from `dotenv` and call `load_dotenv()` at startup.
+- Validate `CHANDRA_API_KEY` in the EventSource generator `event_generator()`: if missing, immediately yield a failed event under the `convert` step and terminate progress streaming cleanly.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+1. **Dependency Check**: Confirm all packages in `requirements.txt` are fully installed in the virtual environment. (Already done successfully)
+2. **Server Launch**: Start the FastAPI server using the Python virtual environment:
+   ```powershell
+   venv\Scripts\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
+   ```
+3. **Pipeline Test Execution**: Execute the backend validation test script `docs/Testing/test_backend_v2.py`:
+   ```powershell
+   venv\Scripts\python.exe docs/Testing/test_backend_v2.py
+   ```
+   This will verify upload, process triggering, EventSource progress log streaming, and Excel binary file generation.
+4. **Shutdown Server**: Properly terminate the background server process once testing completes.

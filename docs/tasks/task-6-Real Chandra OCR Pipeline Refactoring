@@ -1,0 +1,7 @@
+- `[x]` Refactor `chandra_convert.py` to use shared `chandra_poll.py`
+- `[x]` Update `main.py` with `dotenv` loading and SSE API key validation
+- `[x]` Delete unused legacy `ocr_service.py` file
+- `[x]` Delete unused legacy `backend/routes/` directory
+- `[x]` Create and configure local `.env` environment file
+- `[x]` Run integration verification test suite
+- `[x]` Complete walkthrough documentation
