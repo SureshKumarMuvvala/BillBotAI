@@ -1,0 +1,47 @@
+Build the FastAPI backend for the Chandra OCR demo.
+Use the existing backend folder already created.
+IMPORTANT:
+Backend must run inside Python virtual environment.
+
+Use:
+
+* FastAPI
+* CORS
+* StreamingResponse for SSE
+* in-memory job store
+* no database
+
+Provide:
+
+* updated requirements.txt
+* venv activation instructions
+* backend run commands using venv
+
+Endpoints:
+POST /upload
+POST /process/{job_id}
+GET /progress/{job_id}
+GET /download/{job_id}
+
+Pipeline stages:
+
+1. upload
+2. convert
+3. extract
+4. preview
+5. excel
+
+For now:
+
+* mock Chandra API calls
+* simulate delays
+* generate fake progress events
+
+SSE event format:
+{
+"step": "convert",
+"status": "running",
+"message": "Converting OCR..."
+}
+Do not implement real Chandra OCR yet.
+Maintain compatibility for later integration with real Chandra OCR code.

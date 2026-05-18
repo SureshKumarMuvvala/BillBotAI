@@ -1,0 +1,52 @@
+# Scaffold Walkthrough - Milestone 1: React UI Layout
+
+We have successfully built and verified the **Chandra OCR Mock UI Sandbox Layout** under `d:\BillBotAI`. 
+
+The system implements the **Milestone 1** split-screen requirements and features a fully functional mock async workflow, updating each stage automatically and enabling the Excel download button upon completion.
+
+---
+
+## Completed Architecture File Map
+
+The following reusable, clean, Tailwind-only components were created:
+
+* **[UploadPanel.jsx](file:///d:/BillBotAI/frontend/src/components/UploadPanel.jsx)**: Represents the **35% width left panel**. It handles file drag & drop zones, mock sample document injection, and wraps primary controls:
+  * **Start Chandra Extraction** button (disabled if no file, pulses during process).
+  * **Download Excel Spreadsheet** button (disabled initially, highlights with emerald neon theme on completion).
+* **[PreviewCard.jsx](file:///d:/BillBotAI/frontend/src/components/PreviewCard.jsx)**: Renders inside `UploadPanel` when a document is active. It shows a document thumbnail frame, active preview tags, and document size metadata.
+* **[ProgressPanel.jsx](file:///d:/BillBotAI/frontend/src/components/ProgressPanel.jsx)**: Represents the **65% width right panel**. Renders the vertical timeline framework, active telemetry headers, and aggregates timeline items.
+* **[StepItem.jsx](file:///d:/BillBotAI/frontend/src/components/StepItem.jsx)**: The timeline step atom. Styles nodes dynamically according to states (`idle`, `running`, `completed`, `failed`) and prints real-time elapsed durations.
+* **[App.jsx](file:///d:/BillBotAI/frontend/src/App.jsx)**: Ties the layout together in a flex split grid and hosts the state engine simulating pipeline transitions sequentially.
+
+---
+
+## 7-Stage Vertical Stepper Pipeline
+
+The stepper visualizes these 7 requested stages:
+1. **Upload File**: Posts invoice layouts to the backend buffer.
+2. **Convert OCR**: Invokes the remote layout matching tokenization engine.
+3. **Poll Convert Status**: Confirms page alignment coordinates.
+4. **Extract Structured Data**: Maps schema parsing rules.
+5. **Build Preview**: Assembles row bands into medicine matrices.
+6. **Generate Excel**: Compiles workbook layouts.
+7. **Download Ready**: Packages downloadable assets.
+
+---
+
+## Verification & Visual Outcome
+
+We validated the compiled output and verified the entire interactive flow using a browser automation subagent.
+
+### Completed Telemetry Layout
+Here is a high-resolution screenshot of the finalized dashboard. All 7 timeline steps are marked as successfully completed with green glowing rings and individual timer durations. The Excel download button on the left panel has been fully enabled and colored in emerald:
+
+![Completed Dashboard Layout](file:///C:/Users/Suresh%20Kumar/.gemini/antigravity/brain/f08b7fe9-d83d-449c-8848-13ef6094dbc1/chandra_finalized_dashboard_1779117225746.png)
+
+> [!TIP]
+> The full visual walkthrough can be reviewed inside the recorded session file here: [chandra_milestone_1_run_1779117148790.webp](file:///C:/Users/Suresh%20Kumar/.gemini/antigravity/brain/f08b7fe9-d83d-449c-8848-13ef6094dbc1/chandra_milestone_1_run_1779117148790.webp).
+
+---
+
+## Next Steps
+
+We are ready to move on to **Milestone 2**, which introduces live progress animations using mock async functions and dedicated delays, or **Milestone 3**, which scaffolds the FastAPI REST + SSE backend inside the Python virtual environment!

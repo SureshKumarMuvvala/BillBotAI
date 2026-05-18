@@ -1,0 +1,30 @@
+import requests
+import sys
+
+def main():
+    print("Connecting to http://127.0.0.1:8000/ ...")
+    try:
+        r = requests.get('http://127.0.0.1:8000/')
+        print(f"Status: {r.status_code}")
+        print(f"Response: {r.json()}")
+        
+        # Test Upload endpoint metadata creation
+        print("\nTesting task initialization via POST /api/ocr/upload ...")
+        files = {'file': ('test.pdf', b'%PDF-1.4 mock content', 'application/pdf')}
+        r_upload = requests.post('http://127.0.0.1:8000/api/ocr/upload', files=files)
+        print(f"Status: {r_upload.status_code}")
+        print(f"Response: {r_upload.json()}")
+        
+        task_id = r_upload.json().get("task_id")
+        if task_id:
+            print(f"\nTask ID {task_id} successfully created!")
+        else:
+            print("\nError: Task ID not created!")
+            sys.exit(1)
+            
+    except Exception as e:
+        print(f"Failed to query server: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,93 @@
+# Scaffold Walkthrough - Milestone 3: FastAPI Backend
+
+We have successfully built, registered, and verified the **Chandra OCR FastAPI Backend Endpoints (Milestone 3)** in `d:\BillBotAI`. 
+
+The system runs entirely inside your Python virtual environment (`venv`) and implements the direct REST and SSE streaming endpoints required for the React client integrations.
+
+---
+
+## Direct Backend API Endpoints
+
+The root level features these four direct endpoints:
+
+1. **`POST /upload`**:
+   * Accepts invoice files (`UploadFile` file multipart).
+   * Generates a unique `job_id` using UUIDv4.
+   * Creates a mock job entry inside the global in-memory `JOBS` store.
+   * Returns `{ "job_id": str, "filename": str, "status": "uploaded" }`.
+2. **`POST /process/{job_id}`**:
+   * Accepts the generated `job_id`.
+   * Flags the job status to `"processing"` to queue extraction.
+3. **`GET /progress/{job_id}`**:
+   * Streams progress events via `StreamingResponse` using SSE headers (`text/event-stream`).
+   * Iterates through the 5 requested pipeline stages with their exact Milestone 2 simulated delays:
+     * **upload**: `1.0s` delay
+     * **convert**: `5.0s` delay
+     * **extract**: `6.0s` delay
+     * **preview**: `2.0s` delay
+     * **excel**: `2.0s` delay
+   * Emits JSON payload events matching your exact spec:
+     ```json
+     {
+       "step": "convert",
+       "status": "running",
+       "message": "Converting OCR..."
+     }
+     ```
+   * Sets the final job status in the global store to `"completed"`.
+4. **`GET /download/{job_id}`**:
+   * Compiles a real Microsoft Excel workbook dynamically using `openpyxl`.
+   * Returns it as a downloadable binary `StreamingResponse` (MIME `spreadsheetml.sheet`) named `chandra_ocr_invoice_{job_id_prefix}.xlsx`.
+   * The generated spreadsheet contains:
+     * **Summary Dashboard Sheet**: Styled in emerald (`ECFDF5`) displaying Title, Job Reference, Accuracy Score (`96.5%`), Processing Duration, and Total Line Items.
+     * **All Line Items Sheet**: Styled in Dark Slate (`0F172A`) containing complete columns: *Medicine Description*, *Batch*, *Expiry*, *Qty*, *Free Qty*, *Billing Rate*, *MRP*, *GST (%)*, *Net Amount*, and *HSN*. Columns are dynamically padded to match text width.
+
+---
+
+## Endpoint Verification Output
+
+We executed our scratch python request validation suite [test_backend_v2.py](file:///C:/Users/Suresh%20Kumar/.gemini/antigravity/brain/f08b7fe9-d83d-449c-8848-13ef6094dbc1/scratch/test_backend_v2.py) directly with your virtual environment interpreter. The tests executed synchronously, validating the entire sequence:
+
+```bash
+--- 1. Testing POST /upload ---
+Upload Status: 200
+Upload JSON: {'job_id': '83922a9f-3e18-4b70-ba90-d2ab0b8ca960', 'filename': 'test_invoice.pdf', 'status': 'uploaded'}
+
+--- 2. Testing POST /process/{job_id} ---
+Process Status: 200
+Process JSON: {'job_id': '83922a9f-3e18-4b70-ba90-d2ab0b8ca960', 'status': 'processing', 'message': 'Simulated processing pipeline started. Stream progress via /progress/{job_id}'}
+
+--- 3. Testing GET /progress/{job_id} (SSE Stream) ---
+Progress connection established, reading stream...
+SSE Event -> Step: upload, Status: running, Msg: Uploading invoice document payload to backend...
+SSE Event -> Step: upload, Status: completed, Msg: Upload completed successfully.
+SSE Event -> Step: convert, Status: running, Msg: Converting OCR geometric layouts...
+SSE Event -> Step: convert, Status: completed, Msg: OCR conversion successfully aligned.
+SSE Event -> Step: extract, Status: running, Msg: Extracting structured row bands and medicine schemas...
+SSE Event -> Step: extract, Status: completed, Msg: Extracted 3 lines successfully.
+SSE Event -> Step: preview, Status: running, Msg: Building high-fidelity preview tables...
+SSE Event -> Step: preview, Status: completed, Msg: Preview rendering initialized.
+SSE Event -> Step: excel, Status: running, Msg: Compiling openpyxl Workbook details...
+SSE Event -> Step: excel, Status: completed, Msg: Workbook compiled. Excel binary ready for delivery.
+SSE Event -> Step: excel, Status: completed, Msg: Finished. Structured data synchronized.
+
+--- 4. Testing GET /download/{job_id} ---
+Download Status: 200
+Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+Content-Disposition: attachment; filename=chandra_ocr_invoice_83922a9f.xlsx
+Excel workbook payload size: 6382 bytes.
+
+Pipeline Successfully Verified! All systems operational.
+```
+
+---
+
+## Next Steps
+
+We are ready to move on to **Milestone 4**, where we will connect your React frontend to this live FastAPI backend! 
+This will involve:
+* Modifying Axios POST calls to target `http://localhost:8000/upload`.
+* Subscribing the timeline progress panel to the native `EventSource` listening at `http://localhost:8000/progress/{job_id}`.
+* Fetching and saving the Excel binary from `/download/{job_id}` upon final success!
+
+Please let me know when you are ready to begin!

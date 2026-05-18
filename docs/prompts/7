@@ -1,0 +1,23 @@
+Implement Excel download integration.
+
+Requirements:
+
+* backend generates workbook using openpyxl
+* workbook contains:
+
+  * summary sheet
+  * all line items sheet
+  * per-file sheet
+
+Frontend:
+
+* enable Download button only after completion
+* clicking downloads generated workbook
+
+Add:
+
+* success toast
+* loading state
+* error handling
+
+Ensure Excel generation works correctly inside Python virtual environment.

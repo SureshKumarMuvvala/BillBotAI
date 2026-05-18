@@ -1,0 +1,65 @@
+Create a full-stack project structure for a Chandra OCR demo application.
+
+Tech stack:
+
+* Frontend: React + Vite + Tailwind
+* Backend: FastAPI
+* Communication: REST + Server Sent Events (SSE)
+
+IMPORTANT:
+Use a Python virtual environment for the backend.
+
+Project structure:
+
+project-root/
+├── frontend/
+├── backend/
+├── venv/
+├── requirements.txt
+├── README.md
+
+BACKEND REQUIREMENTS:
+
+* create Python venv setup instructions
+* activate commands for:
+
+  * Windows CMD
+  * PowerShell
+  * macOS/Linux
+* install dependencies into venv
+* use requirements.txt
+
+Required backend packages:
+
+* fastapi
+* uvicorn
+* python-multipart
+* pandas
+* openpyxl
+* requests
+* sse-starlette
+* pillow
+
+Frontend requirements:
+
+* Tailwind configured
+* React functional components
+* axios installed
+
+Create starter files:
+
+* frontend/src/App.jsx
+* frontend/src/components/
+* backend/main.py
+* backend/routes/
+* backend/services/
+
+Provide:
+
+* venv creation commands
+* dependency installation commands
+* frontend startup commands
+* backend startup commands
+
+Do not implement OCR yet.
+Only scaffold architecture.

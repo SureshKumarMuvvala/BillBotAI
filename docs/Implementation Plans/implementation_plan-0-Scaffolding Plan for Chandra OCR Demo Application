@@ -1,0 +1,106 @@
+# Scaffolding Plan for Chandra OCR Demo Application
+
+This plan outlines the architecture, files, and commands to scaffold a beautiful, premium full-stack Chandra OCR demo application. 
+
+The application tech stack includes:
+* **Frontend**: React (Vite) + Tailwind CSS + Axios
+* **Backend**: FastAPI + Uvicorn + Server-Sent Events (SSE)
+* **Communication**: REST for API requests, SSE for streaming real-time OCR execution logs/status.
+
+---
+
+## User Review Required
+
+> [!NOTE]
+> We will scaffold a complete, working skeleton with a premium dashboard UI. The OCR service will contain stubbed/mocked methods for now, and real-time processing will be simulated using Server-Sent Events (SSE) to demonstrate the streaming workflow from backend to frontend.
+>
+> Please confirm if you would like any specific theme or color palette. By default, we will implement a gorgeous dark-themed glassmorphic design inspired by advanced developer tools.
+
+---
+
+## Proposed Project Structure
+
+We will create the following layout inside `d:\BillBotAI`:
+
+```
+d:\BillBotAI/
+├── requirements.txt            # Python dependencies
+├── README.md                   # Full setup & run instructions
+├── backend/
+│   ├── main.py                 # FastAPI application entrypoint & CORS config
+│   ├── routes/
+│   │   └── __init__.py
+│   │   └── ocr.py              # OCR REST API endpoints and SSE stream handler
+│   └── services/
+│       └── __init__.py
+│       └── ocr_service.py      # Stubbed OCR extraction and simulation service
+└── frontend/                   # React + Vite client
+    ├── package.json
+    ├── tailwind.config.js      # Tailwind configuration
+    ├── postcss.config.js       # PostCSS configuration
+    ├── index.html
+    └── src/
+        ├── main.jsx
+        ├── App.jsx             # Main dashboard shell
+        ├── index.css           # Tailwind CSS directives & global animations
+        └── components/
+            ├── FileUploader.jsx      # Premium drop-zone for invoice files
+            ├── LogConsole.jsx        # Real-time SSE streaming log terminal
+            └── ResultsViewer.jsx     # Side-by-side OCR JSON and visual mapping
+```
+
+---
+
+## Proposed Changes
+
+### 1. Root Configurations & Instructions
+
+#### [NEW] [requirements.txt](file:///d:/BillBotAI/requirements.txt)
+Define the backend package list requested:
+- `fastapi`
+- `uvicorn`
+- `python-multipart`
+- `pandas`
+- `openpyxl`
+- `requests`
+- `sse-starlette`
+- `pillow`
+
+#### [NEW] [README.md](file:///d:/BillBotAI/README.md)
+Detailed setup instructions for different shell types (CMD, PowerShell, macOS/Linux bash) and startup instructions.
+
+### 2. FastAPI Backend Component
+
+#### [NEW] [main.py](file:///d:/BillBotAI/backend/main.py)
+Initialize the FastAPI application, wire up the CORS middleware to allow cross-origin requests from Vite (`http://localhost:5173`), and include OCR routing.
+
+#### [NEW] [ocr.py](file:///d:/BillBotAI/backend/routes/ocr.py)
+Provide REST endpoints for triggering OCR (receiving multipart files) and an SSE endpoint (`/api/ocr/stream/{task_id}`) to push real-time status messages (e.g. `Received File` -> `Extracting Layout` -> `Reconstructing Tables` -> `Completed`).
+
+#### [NEW] [ocr_service.py](file:///d:/BillBotAI/backend/services/ocr_service.py)
+A stub service class handling OCR state representation and fake streaming events generation.
+
+### 3. React Frontend Component
+
+We will first run Vite CLI helper and configure:
+- React + JS template
+- Tailwind CSS styling
+- Axios for API requests
+- Beautiful dashboard components
+
+#### [NEW] [App.jsx](file:///d:/BillBotAI/frontend/src/App.jsx)
+A gorgeous, interactive dashboard featuring:
+- Glassmorphic controls
+- File upload trigger
+- SSE streaming console showing logs in real-time
+- Dummy data display showing high-fidelity pharmacy OCR results
+
+---
+
+## Verification Plan
+
+### Automated/Manual Verification Steps
+1. **Virtual Environment Validation**: Ensure the `venv` is successfully created and dependencies installed via `requirements.txt`.
+2. **Backend API Validation**: Run the FastAPI server and inspect `/docs` or send a sample `POST /api/ocr/upload` file upload request.
+3. **Frontend Build & Render**: Run the Vite dev server, launch a browser subagent to verify page load, premium visual styling, dark mode, responsive rendering, and dummy layout interaction.
+4. **SSE Communication Validation**: Trigger a mock file upload and observe SSE stream updates appearing in real-time on the frontend console.

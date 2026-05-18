@@ -1,0 +1,31 @@
+Add real OCR preview rendering to the React frontend.
+
+Use live backend OCR data.
+
+Requirements:
+
+* display extracted medicine rows after extraction completes
+* show OCR markdown preview
+* show extraction summary card
+
+Table columns:
+
+* Medicine
+* Batch
+* Expiry
+* Qty
+* Free Qty
+* Rate
+* MRP
+* GST
+* Amount
+* HSN
+
+Requirements:
+
+* sticky table header
+* scrollable table
+* responsive
+* clean enterprise styling
+
+Backend continues running inside Python virtual environment.

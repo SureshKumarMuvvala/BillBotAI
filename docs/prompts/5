@@ -1,0 +1,73 @@
+Use the uploaded Google Colab notebook as the source of truth for the OCR pipeline.
+IMPORTANT:
+Keep backend running entirely inside Python virtual environment.
+
+Use existing notebook logic.
+DO NOT rewrite OCR logic from scratch.
+
+Extract and refactor the notebook logic into reusable backend service modules.
+
+Target structure:
+
+backend/services/
+├── chandra_convert.py
+├── chandra_extract.py
+├── chandra_poll.py
+├── parser_service.py
+├── excel_service.py
+└── progress_service.py
+
+Pipeline:
+
+1. upload file
+2. call convert API
+3. poll convert status
+4. call extract API
+5. parse extracted items
+6. generate Excel workbook
+
+Requirements:
+
+* preserve existing API behavior
+* preserve extraction schema
+* preserve polling logic
+* preserve Excel generation logic
+* remove Colab-specific code
+* remove display()/HTML()/files.download()
+* remove notebook global state
+* emit SSE progress updates during each stage
+* emit quality score
+* emit extracted line item count
+
+Convert notebook code into:
+
+* reusable Python functions
+* FastAPI-compatible services
+* SSE-compatible progress updates
+
+Integrate real Chandra OCR into:
+POST /process/{job_id}
+
+Frontend architecture must remain unchanged.
+
+Backend must:
+
+* run inside Python virtual environment
+* use requirements.txt
+* support local execution
+
+Use extraction schema:
+
+* medicine_name
+* batch_no
+* expiry_date
+* quantity
+* free_quantity
+* rate
+* mrp
+* gst_percent
+* amount
+* hsn_code
+
+Do not break SSE architecture.
+Use environment variables for API keys.

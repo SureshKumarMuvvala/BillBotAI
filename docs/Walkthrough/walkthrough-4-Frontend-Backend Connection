@@ -1,0 +1,50 @@
+# Scaffold Walkthrough - Milestone 4: Frontend-Backend Connection
+
+We have successfully integrated the **React Frontend to the FastAPI Backend (Milestone 4)** in `d:\BillBotAI`.
+
+The web application is now 100% full-stack connected, moving from mock async simulation states to real active API networks on `http://localhost:8000`.
+
+---
+
+## Technical Integration Details
+
+The following architectural updates were successfully implemented:
+
+1. **Axios Uploader Hook (`App.jsx`)**:
+   * When clicking the **Start Chandra Extraction** button, the client serializes the active document using a standard multipart `FormData` boundary.
+   * Transmits the payload to `POST http://localhost:8000/upload` to retrieve a unique UUID `job_id`.
+   * Triggers the backend processing queue using `POST http://localhost:8000/process/{job_id}`.
+2. **Native EventSource Stream Listener (`App.jsx`)**:
+   * Instantiates a native client-side `EventSource` connection pointing to `http://localhost:8000/progress/{job_id}`.
+   * Listens to the SSE message channel, decoding the live JSON payloads to map stages: `upload`, `convert`, `extract`, `preview`, `excel`.
+   * Integrates an active duration ticker interval: as soon as a step transitions to `"running"`, a dedicated React interval increments its `duration` state every second. When the step is marked `"completed"`, the timer clears instantly.
+   * Renders the real-time server messages (e.g. *"OCR conversion successfully aligned."*, *"Extracted 3 lines successfully."*) directly within each step's description block.
+3. **Excel Binary Retrieval Hook (`App.jsx`)**:
+   * When the final completion event settles, the `EventSource` connection is closed and the emerald **Download Excel Spreadsheet** button becomes active.
+   * Points `window.location.href` directly to `http://localhost:8000/download/{job_id}`, prompting the browser to download the compiled openpyxl binary sheet immediately.
+
+---
+
+## Verification & Visual Outcome
+
+We validated the live, connected stack using the browser automation subagent. The dashboard successfully uploaded the PDF file, established connection channels, printed backend log messages, and successfully enabled spreadsheet downloads.
+
+### Completed Live Dashboard Layout
+Below is the screenshot captured at the successful end of the connected pipeline, showcasing the 5 unified steps, live durations, and server log descriptions:
+
+![Connected Completed Dashboard Layout](file:///C:/Users/Suresh%20Kumar/.gemini/antigravity/brain/f08b7fe9-d83d-449c-8848-13ef6094dbc1/chandra_milestone_4_completed_1779121601840.png)
+
+> [!TIP]
+> The live stack execution recording, showing network transfers, loader animations, and progress, is available here: [chandra_milestone_4_run_1779121537888.webp](file:///C:/Users/Suresh%20Kumar/.gemini/antigravity/brain/f08b7fe9-d83d-449c-8848-13ef6094dbc1/chandra_milestone_4_run_1779121537888.webp).
+
+---
+
+## Next Steps
+
+We are ready to move on to **Milestone 5**, which is to integrate the **Real Chandra OCR API service**! 
+This will involve:
+* Setting up `backend/services/chandra_service.py` with real Chandra inference engines.
+* Invoking the Chandra REST endpoint, parsing standard pharmacy row data schemas (`medicine_name`, `batch_no`, `expiry_date`, `quantity`, `free_quantity`, `rate`, `mrp`, `gst_percent`, `amount`, `hsn_code`).
+* Transmitting authentic quality metrics to the frontend.
+
+Please let me know when you are ready to begin Milestone 5!

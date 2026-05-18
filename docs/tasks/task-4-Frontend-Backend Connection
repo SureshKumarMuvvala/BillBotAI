@@ -1,0 +1,12 @@
+# Scaffolding Checklist - Milestone 4: Frontend-Backend Connection
+
+- [x] Update `App.jsx` to connect to the FastAPI server:
+  - Configure `INITIAL_STEPS` to represent the 5 backend stages: `upload`, `convert`, `extract`, `preview`, `excel`
+  - Integrate Axios for file upload (`POST http://localhost:8000/upload`) and trigger process (`POST http://localhost:8000/process/{job_id}`)
+  - Integrate native `EventSource` to stream SSE progress events from `http://localhost:8000/progress/{job_id}`
+- [x] Implement live stepper transitions and state timers:
+  - Maintain an active second counter for the currently running stage using local React intervals
+  - Map backend event messages directly to step descriptions
+- [x] Connect the Download Excel button to `http://localhost:8000/download/{job_id}` to retrieve the compiled spreadsheet binary
+- [x] Handle SSE disconnects, transaction errors, and successful completion states
+- [x] Verify the complete end-to-end integration using the Browser subagent

@@ -1,0 +1,16 @@
+Polish the Chandra OCR demo UI.
+
+Add:
+
+* animated transitions
+* loading shimmer
+* hover states
+* glassmorphism cards
+* dark sidebar
+* progress connectors
+* better typography
+* responsive improvements
+
+Do not redesign architecture.
+
+Backend must continue working inside Python virtual environment.

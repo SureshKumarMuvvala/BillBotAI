@@ -1,0 +1,13 @@
+# Scaffolding Checklist - Milestone 3: FastAPI Backend
+
+- [x] Update `backend/main.py` to:
+  - Configure CORS middleware
+  - Wire the direct endpoints: `POST /upload`, `POST /process/{job_id}`, `GET /progress/{job_id}`, `GET /download/{job_id}`
+  - Manage a global in-memory `JOBS` dictionary
+- [x] Implement `StreamingResponse` inside `GET /progress/{job_id}`:
+  - Simulates the pipeline with delays matching Milestone 2 (upload: 1s, convert: 5s, extract: 6s, preview: 2s, excel: 2s)
+  - Stream events in the requested JSON SSE format: `{"step": "...", "status": "...", "message": "..."}`
+- [x] Implement openpyxl Workbook compilation inside `GET /download/{job_id}`:
+  - Generates a real Excel binary stream on the fly and returns it as a file attachment
+- [x] Verify endpoints using a python request script inside `venv`
+- [x] Validate server responsiveness

@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-dark-950: #030712;
+  --color-dark-900: #0b0f19;
+  --color-dark-800: #111827;
+  --color-dark-700: #1f2937;
+  --color-dark-600: #374151;
+  
+  --color-accent-glowing: #06b6d4;
+  --color-accent-soft: #0891b2;
+  --color-accent-dark: #0e7490;
+  
+  --font-sans: 'Outfit', 'Inter', 'system-ui', 'sans-serif';
+  --font-mono: 'Fira Code', 'JetBrains Mono', 'monospace';
+  
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+  
+  @keyframes glow {
+    0% { box-shadow: 0 0 5px rgba(6, 182, 212, 0.2), 0 0 10px rgba(6, 182, 212, 0.2); }
+    100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.6), 0 0 25px rgba(6, 182, 212, 0.4); }
+  }
+}
+
+@utility glass-panel {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@utility glass-panel-interactive {
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    border-color: rgba(6, 182, 212, 0.4);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
+    transform: translateY(-2px);
+  }
+}
+
+@utility glass-card {
+  background: rgba(31, 41, 55, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@utility glow-accent {
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+}
+
+@utility glow-border {
+  border-color: rgba(6, 182, 212, 0.5);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+}
+
+@utility text-glow {
+  text-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+}
+
+body {
+  background-color: var(--color-dark-950);
+  color: #e2e8f0;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(3, 7, 18, 0.9);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(55, 65, 81, 0.8);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.8);
+}

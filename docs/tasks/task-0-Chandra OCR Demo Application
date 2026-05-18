@@ -1,0 +1,11 @@
+# Scaffolding Checklist - Chandra OCR Demo Application
+
+- [x] Create root configurations (`requirements.txt`, `README.md`)
+- [x] Scaffold FastAPI backend files (`backend/main.py`, `backend/routes/ocr.py`, `backend/services/ocr_service.py`)
+- [x] Initialize Vite React frontend
+- [x] Install frontend styling dependencies (Tailwind, PostCSS, Autoprefixer, Axios, Lucide React)
+- [x] Configure Tailwind and PostCSS
+- [x] Implement premium frontend files (`frontend/src/App.jsx`, `frontend/src/index.css`, `frontend/src/main.jsx`, `frontend/src/components/FileUploader.jsx`, `frontend/src/components/LogConsole.jsx`, `frontend/src/components/ResultsViewer.jsx`)
+- [x] Create Python virtual environment (`venv`) and install backend dependencies
+- [x] Validate backend API and SSE routes
+- [x] Validate frontend compilation and visually inspect the dashboard using Browser tool

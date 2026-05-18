@@ -1,0 +1,23 @@
+Refactor and productionize the Chandra OCR demo.
+
+Requirements:
+
+* move constants into config files
+* create reusable API client
+* improve error handling
+* clean component structure
+* remove duplicate logic
+* add loading boundaries
+* add retry support for SSE disconnects
+* optimize React rendering
+* add environment variables
+* improve folder organization
+
+Backend must:
+
+* run entirely from Python virtual environment
+* support requirements.txt installation
+* support .env configuration
+* support local development startup
+
+Keep UI behavior unchanged.

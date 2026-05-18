@@ -1,0 +1,11 @@
+# Scaffolding Checklist - Milestone 2: Live Progress Animation
+
+- [x] Adjust `App.jsx` pipeline stepper delays to match requirements:
+  - upload: 1s
+  - convert: 5s (split: 3s Convert + 2s Polling)
+  - extract: 6s
+  - preview: 2s
+  - excel: 2s
+- [x] Ensure duration counter increments dynamically every second for the currently running stage
+- [x] Confirm spinner is active on running steps and green checks on completed ones
+- [x] Validate simulated timeline execution using Browser subagent and capture visual outcomes

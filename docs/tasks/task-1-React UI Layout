@@ -1,0 +1,8 @@
+# Scaffolding Checklist - Milestone 1: React UI Layout
+
+- [ ] Create reusable component `StepItem.jsx` (supporting idle, running, completed, failed states)
+- [ ] Create reusable component `ProgressPanel.jsx` (stepper card + vertical timeline)
+- [ ] Create reusable component `PreviewCard.jsx` (image preview and document status)
+- [ ] Create reusable component `UploadPanel.jsx` (drag & drop, preview frame, trigger & Excel download buttons)
+- [ ] Refactor `App.jsx` to mount the 35% / 65% split-screen layout and drive state changes
+- [ ] Validate compiled layout visually using the Browser subagent

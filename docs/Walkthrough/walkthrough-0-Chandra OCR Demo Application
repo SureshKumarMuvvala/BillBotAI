@@ -1,0 +1,86 @@
+# Scaffold Walkthrough - Chandra OCR Demo Application
+
+We have successfully scaffolded a beautiful, high-fidelity, full-stack architecture for your **Chandra OCR Demo Application** under `d:\BillBotAI`. 
+
+The system is fully connected and verified:
+1. **FastAPI Backend** manages REST endpoints and Server-Sent Events (SSE) progress streams.
+2. **React + Vite Frontend** renders a gorgeous, glassmorphic layout utilizing Tailwind CSS v4 design tokens and fetches live pipeline statuses via an `EventSource` connection.
+
+---
+
+## Completed Architecture File Map
+
+Here is the structured set of starter files created to support the system:
+
+* **Root Settings**:
+  * [requirements.txt](file:///d:/BillBotAI/requirements.txt): Declares required packages (`fastapi`, `uvicorn`, `sse-starlette`, `pandas`, etc.).
+  * [README.md](file:///d:/BillBotAI/README.md): Detailed installation instructions across shells and platform systems.
+* **FastAPI Backend Services**:
+  * [backend/main.py](file:///d:/BillBotAI/backend/main.py): Sets up CORS rules and wires routers.
+  * [backend/routes/ocr.py](file:///d:/BillBotAI/backend/routes/ocr.py): Handles REST file uploads and streams SSE events on route `/api/ocr/stream/{task_id}`.
+  * [backend/services/ocr_service.py](file:///d:/BillBotAI/backend/services/ocr_service.py): Simulates an 8-stage table extraction flow with sample high-fidelity pharmacy line items.
+* **Vite React Frontend Web Client**:
+  * [frontend/src/App.jsx](file:///d:/BillBotAI/frontend/src/App.jsx): Master dashboard managing state, Axios uploads, and SSE EventSource connections.
+  * [frontend/src/index.css](file:///d:/BillBotAI/frontend/src/index.css): Integrated Tailwind CSS v4 variables with `@theme` configurations and glow micro-animations.
+  * **Interactive Widgets**:
+    * [frontend/src/components/FileUploader.jsx](file:///d:/BillBotAI/frontend/src/components/FileUploader.jsx): Premium file drop zone featuring an **Instant Demo Run** trigger.
+    * [frontend/src/components/LogConsole.jsx](file:///d:/BillBotAI/frontend/src/components/LogConsole.jsx): Monospaced hacking-style log terminal displaying live pipeline steps.
+    * [frontend/src/components/ResultsViewer.jsx](file:///d:/BillBotAI/frontend/src/components/ResultsViewer.jsx): Structured pharmacy details, row bands, accuracy tags (92%-99%), and a raw JSON code block viewer.
+
+---
+
+## Verification & Visual Outcome
+
+We launched the FastAPI backend in our Python virtual environment (`venv`) alongside the Vite web server, and fully verified the end-to-end integration using a browser automation subagent.
+
+### Live Telemetry and Log Streaming
+Below is a screenshot of the log terminal populating SSE events in real-time as they are yielded by the FastAPI server during mock invoice extraction:
+
+![Log Telemetry Screenshot](file:///C:/Users/Suresh%20Kumar/.gemini/antigravity/brain/f08b7fe9-d83d-449c-8848-13ef6094dbc1/completed_dashboard_1779116490684.png)
+
+### High-Fidelity Design Rendering
+Once the pipeline concludes successfully, the completed data is instantly structuralized into our design layout. The product bands are displayed side-by-side with accuracy indexes:
+
+![Completed UI Full view](file:///C:/Users/Suresh%20Kumar/.gemini/antigravity/brain/f08b7fe9-d83d-449c-8848-13ef6094dbc1/full_dashboard_validation_1779116508426.png)
+
+> [!TIP]
+> The full interaction sequence was captured and saved as a video session recording. You can view the live animation of the logs streaming and results building here: [chandra_ocr_working_demo_1779116424908.webp](file:///C:/Users/Suresh%20Kumar/.gemini/antigravity/brain/f08b7fe9-d83d-449c-8848-13ef6094dbc1/chandra_ocr_working_demo_1779116424908.webp).
+
+---
+
+## Command Quick-Reference
+
+### Virtual Environment Setup & Activation
+
+From the project root `d:\BillBotAI`:
+
+1. **Create Virtual Environment**:
+   ```bash
+   python -m venv venv
+   ```
+2. **Activate Virtual Environment**:
+   * **Windows cmd.exe**: `venv\Scripts\activate.bat`
+   * **Windows PowerShell**: `.\venv\Scripts\Activate.ps1`
+   * **macOS/Linux Bash**: `source venv/bin/activate`
+3. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Execution Commands
+
+To start the local stack for development:
+
+* **Backend Start** (FastAPI):
+  Ensure your `venv` is activated, and run from the root:
+  ```bash
+  uvicorn backend.main:app --reload --port 8000
+  ```
+  *Swagger docs are served at [http://localhost:8000/docs](http://localhost:8000/docs).*
+
+* **Frontend Start** (React dev server):
+  Navigate to the `frontend/` folder and run:
+  ```bash
+  npm run dev
+  ```
+  *Web client is served at [http://localhost:5173/](http://localhost:5173/).*

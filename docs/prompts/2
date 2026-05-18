@@ -1,0 +1,26 @@
+Add live progress animation logic to the React frontend.
+
+Requirements:
+
+* simulate pipeline execution using mock async functions
+* each stage updates automatically
+* show spinner while running
+* show green check when complete
+* show red icon on error
+* display elapsed seconds beside each stage
+
+Use React state only.
+
+Add fake delays:
+
+* upload: 1 second
+* convert: 5 seconds
+* extract: 6 seconds
+* preview: 2 seconds
+* excel: 2 seconds
+
+When completed:
+
+* enable Download Excel button
+
+Keep architecture compatible with FastAPI backend running in a Python virtual environment.

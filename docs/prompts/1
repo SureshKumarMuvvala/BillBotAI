@@ -1,0 +1,56 @@
+Build the main React UI layout for the Chandra OCR demo.
+
+Assume backend runs inside Python virtual environment.
+
+Requirements:
+
+Split screen layout:
+
+* Left panel width 35%
+* Right panel width 65%
+
+LEFT PANEL:
+
+* drag/drop upload area
+* image preview section
+* Start Processing button
+* Download Excel button (disabled initially)
+
+RIGHT PANEL:
+
+* live progress stepper card
+* vertical timeline layout
+* stages:
+
+  1. Upload File
+  2. Convert OCR
+  3. Poll Convert Status
+  4. Extract Structured Data
+  5. Build Preview
+  6. Generate Excel
+  7. Download Ready
+
+Each step supports:
+
+* idle
+* running
+* completed
+* failed
+
+Visual requirements:
+
+* modern enterprise UI
+* rounded cards
+* subtle shadows
+* Tailwind only
+* responsive
+
+Create reusable components:
+
+* UploadPanel
+* ProgressPanel
+* StepItem
+* PreviewCard
+
+Use mock static data for now.
+Do not connect backend yet.

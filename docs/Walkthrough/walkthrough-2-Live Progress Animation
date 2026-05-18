@@ -1,0 +1,43 @@
+# Scaffold Walkthrough - Milestone 2: Live Progress Animation
+
+We have successfully integrated the **Chandra OCR Live Progress Animation Logic (Milestone 2)** in `d:\BillBotAI`. 
+
+The system implements the exact fake delays specified by your prompt and tracks the duration of active steps in real-time, enabling the download action seamlessly upon final checklist settlement.
+
+---
+
+## Delay Mappings (Milestone 2 Specifications)
+
+The simulated workflow executes sequentially with these exact durations:
+1. **Upload File**: Completed successfully in exactly **`1 second`**.
+2. **Convert OCR & Polling**: The conversion process runs for **`3 seconds`** and the transaction queue polling runs for **`2 seconds`** (totaling exactly **`5 seconds`** for conversion).
+3. **Extract Structured Data**: Runs for exactly **`6 seconds`** to reconstruct column mappings.
+4. **Build Preview**: Runs for exactly **`2 seconds`** to form row bands.
+5. **Generate Excel**: Compiles workbook sheets in exactly **`2 seconds`**.
+6. **Download Ready**: Settles instantly to toggle control states.
+
+---
+
+## Verification & Visual Outcome
+
+We validated the compiled state and simulated the entire execution sequence using the browser automation subagent.
+
+### Completed Telemetry & Exact Durations
+Below is the screenshot taken at the completion of the simulation. All steps display their precise duration metrics (`1s`, `3s`, `2s`, `6s`, `2s`, `2s`):
+
+![Completed Dashboard Layout](file:///C:/Users/Suresh%20Kumar/.gemini/antigravity/brain/f08b7fe9-d83d-449c-8848-13ef6094dbc1/chandra_milestone_2_completed_1779118495323.png)
+
+> [!TIP]
+> The live timeline execution and timer animations can be reviewed inside the recorded session video file here: [chandra_milestone_2_run_1779118419415.webp](file:///C:/Users/Suresh%20Kumar/.gemini/antigravity/brain/f08b7fe9-d83d-449c-8848-13ef6094dbc1/chandra_milestone_2_run_1779118419415.webp).
+
+---
+
+## Next Steps
+
+We are ready to move on to **Milestone 3**, which is to build the FastAPI backend inside the Python virtual environment and set up endpoints:
+* `POST /upload`
+* `POST /process/{job_id}`
+* `GET /progress/{job_id}`
+* `GET /download/{job_id}`
+
+Please let me know when you are ready to begin Milestone 3!

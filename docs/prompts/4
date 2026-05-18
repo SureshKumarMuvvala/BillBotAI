@@ -1,0 +1,33 @@
+Connect the React frontend to the FastAPI backend.
+
+Assume backend runs inside activated Python virtual environment.
+
+Requirements:
+
+* upload image to backend
+* create job_id
+* open EventSource connection to SSE endpoint
+* update progress UI live from backend events
+
+Behavior:
+
+* Start Processing uploads file
+* backend returns job_id
+* frontend subscribes to /progress/{job_id}
+* UI updates each stage live
+
+Show:
+
+* current active stage
+* stage durations
+* backend messages
+
+Handle:
+
+* disconnects
+* errors
+* completed pipeline
+
+Use axios for upload.
+Use native EventSource for SSE.
+Do not integrate real OCR yet.
