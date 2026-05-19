@@ -64,6 +64,12 @@ def get_extracted_fields(result: dict) -> dict:
             logger.warning("get_extracted_fields: failed to parse JSON string")
             return {}
 
+    if isinstance(raw, list):
+        if len(raw) > 0 and isinstance(raw[0], dict):
+            raw = raw[0]
+        else:
+            raw = {}
+
     return raw or {}
 
 
@@ -96,8 +102,15 @@ def get_line_items(extract_result: dict) -> List[dict]:
         return []
 
     cleaned = [clean_line_item(item) for item in raw_items]
-    logger.info("get_line_items: %d item(s) extracted", len(cleaned))
-    return cleaned
+    
+    # Deduplicate adjacent identical rows (common LLM hallucination at end of tables)
+    deduped = []
+    for item in cleaned:
+        if not deduped or deduped[-1] != item:
+            deduped.append(item)
+            
+    logger.info("get_line_items: %d item(s) extracted", len(deduped))
+    return deduped
 
 
 def compute_quality_score(convert_result: dict) -> Any:
