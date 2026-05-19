@@ -1,0 +1,57 @@
+# Extended GRN Column Support
+
+Add 6 new fields (Pack, MRP/Tab, Rate/Tab, Discount%, Tax₹, Barcode) to the full pipeline:
+OCR schema → parser normalization → Excel export → frontend table.
+
+## Proposed Changes
+
+### Backend — Schema & Extraction
+
+#### [MODIFY] [chandra_extract.py](file:///d:/BillBotAI/backend/services/chandra_extract.py)
+- Expand `EXTRACT_SCHEMA` properties to include `pack`, `mrp_per_tab`, `rate_per_tab`, `discount_percent`, `tax_amount`, `barcode`
+- Update the LLM description for each new field with OCR alias hints
+
+#### [MODIFY] [parser_service.py](file:///d:/BillBotAI/backend/services/parser_service.py)
+- Extend `ALLOWED_FIELDS` list with the 6 new field names
+- Add `COLUMN_ALIASES` dict for noisy OCR header normalization
+- Add `parse_number(value)` helper that strips `₹`, `%`, commas, and returns `float | None`
+- Apply `parse_number` in `clean_line_item()` for all numeric fields
+
+---
+
+### Backend — Excel Export
+
+#### [MODIFY] [excel_service.py](file:///d:/BillBotAI/backend/services/excel_service.py)
+- Update `all_headers` / `all_rows` in **Sheet 2 "All Line Items"** to include new columns in the final order:
+  `Source File, Medicine Name, Batch No, Expiry Date, Pack, Quantity, Free Quantity, MRP, Rate, MRP(PerTab), Rate(PerTab), Discount(%), GST%, Tax(₹), Amount, Barcode, HSN Code`
+- Update **Sheet 3 per-file** headers/rows identically (minus Source File)
+- Set barcode + HSN columns to `@` (text) number format so leading zeros survive
+- Increase `merge_cols` in `title_block()` calls to 17 (new column count)
+
+---
+
+### Frontend — Constants
+
+#### [MODIFY] [constants.js](file:///d:/BillBotAI/frontend/src/config/constants.js)
+- Replace `RESULT_COLUMNS` with all 16 columns in the specified order
+- Add new keys to `DECIMAL_KEYS`: `mrp_per_tab`, `rate_per_tab`, `tax_amount`
+- Add `tax_amount` and `amount` to `TOTAL_KEYS`
+
+---
+
+### Frontend — OCR Results Panel
+
+#### [MODIFY] [OCRResultsPanel.jsx](file:///d:/BillBotAI/frontend/src/components/OCRResultsPanel.jsx)
+- Update `fmt()` to handle `gst_percent` and `discount_percent` as `%` display, barcode as string (no numeric coercion)
+- Set `min-w-[1400px]` on the table for horizontal scroll with all 16 columns
+- Update footer totals slice offset from `3` → `4` (now `#` + Item Name + Batch + Expiry + Pack before numeric cols)
+
+## Verification Plan
+
+### Automated
+- Restart backend (`uvicorn`), upload a test invoice, confirm new keys appear in `/results/{job_id}` JSON response
+- Download Excel, open in Excel/LibreOffice — verify 17 columns, barcode as text, auto-widths
+
+### Manual
+- Confirm frontend table shows all 16 columns with horizontal scroll
+- Confirm old invoices (missing new fields) render `—` not errors

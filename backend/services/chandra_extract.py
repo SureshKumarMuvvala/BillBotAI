@@ -30,7 +30,7 @@ CONVERT_MODE  = "accurate"
 POLL_INTERVAL = 3
 TIMEOUT_SEC   = 180
 
-# ── Extraction schema — preserved exactly from the notebook ───────────────────
+# ── Extraction schema — extended with Pack, MRP/Tab, Rate/Tab, Disc, Tax₹, Barcode ──
 EXTRACT_SCHEMA = {
     "type": "object",
     "properties": {
@@ -40,16 +40,22 @@ EXTRACT_SCHEMA = {
             "items": {
                 "type": "object",
                 "properties": {
-                    "medicine_name": {"type": "string",          "description": "Medicine name"},
-                    "batch_no":      {"type": ["string", "null"], "description": "Batch number"},
-                    "expiry_date":   {"type": ["string", "null"], "description": "Expiry date"},
-                    "quantity":      {"type": ["number", "null"], "description": "Quantity"},
-                    "free_quantity": {"type": ["number", "null"], "description": "Free quantity"},
-                    "rate":          {"type": ["number", "null"], "description": "Unit rate"},
-                    "mrp":           {"type": ["number", "null"], "description": "MRP (Maximum Retail Price)"},
-                    "gst_percent":   {"type": ["number", "null"], "description": "Total GST percent (If CGST and SGST are separate, add them together. E.g., if CGST is 6% and SGST is 6%, output 12)"},
-                    "amount":        {"type": ["number", "null"], "description": "Line amount"},
-                    "hsn_code":      {"type": ["string", "null"], "description": "HSN code"},
+                    "medicine_name":    {"type": "string",          "description": "Medicine / product name (columns: Item, Product, Description, Drug Name)"},
+                    "batch_no":         {"type": ["string", "null"], "description": "Batch number (columns: Batch, Batch No, Lot No)"},
+                    "expiry_date":      {"type": ["string", "null"], "description": "Expiry date (columns: Expiry, Exp, Exp Date, EXP)"},
+                    "pack":             {"type": ["string", "null"], "description": "Pack size / form e.g. 10x10, 1x10, STRIP, BOX, BOTTLE (columns: Pack, Packing, Pack Size)"},
+                    "quantity":         {"type": ["number", "null"], "description": "Quantity / units ordered (columns: Qty, Quantity, Units)"},
+                    "free_quantity":    {"type": ["number", "null"], "description": "Free / bonus units (columns: Free, Free Qty, Bonus)"},
+                    "mrp":              {"type": ["number", "null"], "description": "MRP per pack in rupees (columns: MRP, M.R.P)"},
+                    "rate":             {"type": ["number", "null"], "description": "Purchase rate per pack in rupees (columns: Rate, Price, Pur Rate)"},
+                    "mrp_per_tab":      {"type": ["number", "null"], "description": "MRP per tablet/unit (columns: MRP/Tab, MRP Per Tab, Unit MRP)"},
+                    "rate_per_tab":     {"type": ["number", "null"], "description": "Rate per tablet/unit (columns: Rate/Tab, Rate Per Tab, Unit Rate)"},
+                    "discount_percent": {"type": ["number", "null"], "description": "Discount percentage off MRP (columns: Disc, Discount, Disc%, Discount %)"},
+                    "gst_percent":      {"type": ["number", "null"], "description": "Total GST percent. If CGST+SGST are separate, add them (e.g. 6%+6%=12). Columns: GST, IGST, Tax%"},
+                    "tax_amount":       {"type": ["number", "null"], "description": "Tax amount in rupees (columns: Tax, Tax Rs, Tax Amt, Tax Amount)"},
+                    "amount":           {"type": ["number", "null"], "description": "Final line total in rupees (columns: Amount, Amt, Total, Net)"},
+                    "barcode":          {"type": ["string", "null"], "description": "Barcode or EAN / product code (columns: Barcode, EAN, EAN Code, Product Code)"},
+                    "hsn_code":         {"type": ["string", "null"], "description": "HSN / SAC code (columns: HSN, HSN Code, SAC)"},
                 },
                 "required": ["medicine_name"],
             },

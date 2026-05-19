@@ -59,22 +59,29 @@ export const SSE_BASE_DELAY_MS = 1_000; // doubles each retry
 export const DEMO_FILE_NAME = 'sample_pharmacy_invoice.pdf';
 export const DEMO_FILE_SIZE = 1_048_576; // 1 MB
 
-// ── Excel column schema ───────────────────────────────────────────────────────
+// ── GRN result table column schema ───────────────────────────────────────────
 export const RESULT_COLUMNS = [
-  { key: 'medicine_name', label: 'Medicine', width: 'min-w-[180px]', align: 'left'  },
-  { key: 'batch_no',      label: 'Batch',    width: 'min-w-[90px]',  align: 'left'  },
-  { key: 'expiry_date',   label: 'Expiry',   width: 'min-w-[80px]',  align: 'center'},
-  { key: 'quantity',      label: 'Qty',      width: 'min-w-[55px]',  align: 'right' },
-  { key: 'free_quantity', label: 'Free',     width: 'min-w-[55px]',  align: 'right' },
-  { key: 'rate',          label: 'Rate',     width: 'min-w-[70px]',  align: 'right' },
-  { key: 'mrp',           label: 'MRP',      width: 'min-w-[70px]',  align: 'right' },
-  { key: 'gst_percent',   label: 'GST%',     width: 'min-w-[55px]',  align: 'right' },
-  { key: 'amount',        label: 'Amount',   width: 'min-w-[80px]',  align: 'right' },
-  { key: 'hsn_code',      label: 'HSN',      width: 'min-w-[75px]',  align: 'left'  },
+  { key: 'medicine_name',    label: 'Item Name',    width: 'min-w-[180px]', align: 'left'   },
+  { key: 'batch_no',         label: 'Batch No',     width: 'min-w-[90px]',  align: 'left'   },
+  { key: 'expiry_date',      label: 'Expiry Date',  width: 'min-w-[85px]',  align: 'center' },
+  { key: 'pack',             label: 'Pack',         width: 'min-w-[75px]',  align: 'center' },
+  { key: 'quantity',         label: 'Qty',          width: 'min-w-[55px]',  align: 'right'  },
+  { key: 'free_quantity',    label: 'Free Qty',     width: 'min-w-[60px]',  align: 'right'  },
+  { key: 'mrp',              label: 'MRP(₹)',       width: 'min-w-[72px]',  align: 'right'  },
+  { key: 'rate',             label: 'Rate(₹)',      width: 'min-w-[72px]',  align: 'right'  },
+  { key: 'mrp_per_tab',      label: 'MRP(PerTab)',  width: 'min-w-[80px]',  align: 'right'  },
+  { key: 'rate_per_tab',     label: 'Rate(PerTab)', width: 'min-w-[82px]',  align: 'right'  },
+  { key: 'discount_percent', label: 'Discount(%)',  width: 'min-w-[78px]',  align: 'right'  },
+  { key: 'gst_percent',      label: 'Tax(%)',       width: 'min-w-[58px]',  align: 'right'  },
+  { key: 'tax_amount',       label: 'Tax(₹)',       width: 'min-w-[68px]',  align: 'right'  },
+  { key: 'amount',           label: 'Amount(₹)',    width: 'min-w-[82px]',  align: 'right'  },
+  { key: 'barcode',          label: 'Barcode',      width: 'min-w-[120px]', align: 'left'   },
+  { key: 'hsn_code',         label: 'HSN Code',     width: 'min-w-[80px]',  align: 'left'   },
 ];
 
-// Keys where the footer sums displayed totals
-export const TOTAL_KEYS = new Set(['quantity', 'free_quantity', 'amount']);
+// Keys where the footer shows column sums
+export const TOTAL_KEYS = new Set(['quantity', 'free_quantity', 'tax_amount', 'amount']);
 
 // Keys rendered with 2 decimal places
-export const DECIMAL_KEYS = new Set(['rate', 'mrp', 'amount']);
+export const DECIMAL_KEYS = new Set(['mrp', 'rate', 'mrp_per_tab', 'rate_per_tab', 'tax_amount', 'amount']);
+

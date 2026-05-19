@@ -9,8 +9,11 @@ import { RESULT_COLUMNS, TOTAL_KEYS, DECIMAL_KEYS } from '../config/constants';
 function fmt(val, colKey) {
   if (val === null || val === undefined || val === '')
     return <span className="text-slate-700 font-mono text-[10px]">—</span>;
+  // Barcode / text fields: preserve as-is (no numeric coercion / leading-zero loss)
+  if (colKey === 'barcode' || colKey === 'batch_no' || colKey === 'hsn_code' || colKey === 'pack')
+    return String(val);
   if (DECIMAL_KEYS.has(colKey)) return Number(val).toFixed(2);
-  if (colKey === 'gst_percent') return `${val}%`;
+  if (colKey === 'gst_percent' || colKey === 'discount_percent') return `${val}%`;
   return String(val);
 }
 
@@ -122,8 +125,8 @@ function DataTable({ rows, isLoading }) {
   if (isLoading) {
     return (
       <div className="rounded-xl border border-slate-800 overflow-hidden">
-        <div className="overflow-auto max-h-[380px]">
-          <table className="w-full text-xs border-collapse min-w-[860px]">
+        <div className="overflow-x-auto max-h-[380px]">
+          <table className="w-full text-xs border-collapse min-w-[1400px]">
             <thead className="sticky top-0 z-10 bg-[#0a0f1e]">
               <tr className="border-b border-slate-800">
                 <th className="px-3 py-3 w-8 text-left">
@@ -161,8 +164,8 @@ function DataTable({ rows, isLoading }) {
 
   return (
     <div className="rounded-xl border border-slate-800 overflow-hidden">
-      <div className="overflow-auto max-h-[420px]">
-        <table className="w-full text-xs border-collapse min-w-[860px]">
+      <div className="overflow-x-auto max-h-[420px]">
+        <table className="w-full text-xs border-collapse min-w-[1400px]">
           <thead className="sticky top-0 z-10">
             <tr className="bg-[#080d1a] border-b border-slate-800">
               <th className="px-3 py-3 text-left text-[9px] font-mono font-bold text-slate-600 tracking-widest w-8">#</th>
@@ -199,16 +202,17 @@ function DataTable({ rows, isLoading }) {
           </tbody>
           <tfoot>
             <tr className="bg-slate-950/70 border-t border-slate-800">
-              <td colSpan={3} className="px-3 py-2 text-[10px] font-mono text-slate-600">
+              {/* Span non-numeric prefix columns: #, Item Name, Batch No, Expiry Date, Pack */}
+              <td colSpan={5} className="px-3 py-2 text-[10px] font-mono text-slate-600">
                 {rows.length} row{rows.length !== 1 ? 's' : ''}
               </td>
-              {RESULT_COLUMNS.slice(3).map(({ key }) => {
+              {RESULT_COLUMNS.slice(4).map(({ key }) => {
                 const nums  = rows.map(r => Number(r[key])).filter(n => !isNaN(n));
                 const total = nums.length > 0 && TOTAL_KEYS.has(key)
                   ? nums.reduce((a, b) => a + b, 0) : null;
                 return (
                   <td key={key} className="px-3 py-2 text-right font-mono text-[10px] text-slate-400 font-semibold">
-                    {total !== null ? (key === 'amount' ? total.toFixed(2) : total) : ''}
+                    {total !== null ? (DECIMAL_KEYS.has(key) ? total.toFixed(2) : total) : ''}
                   </td>
                 );
               })}

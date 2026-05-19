@@ -58,7 +58,7 @@ def write_table(ws, headers, rows, start_row=1):
     return start_row + len(rows)
 
 
-def title_block(ws, text, subtitle="", merge_cols=11):
+def title_block(ws, text, subtitle="", merge_cols=18):
     ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=merge_cols)
     c = ws.cell(row=1, column=1, value=text)
     c.font = TITLE_FONT; c.fill = TITLE_FILL; c.alignment = LFT
@@ -100,16 +100,25 @@ def build_workbook(
     title_block(ws_all, "All GRN Line Items")
     all_headers = [
         "Source File", "Medicine Name", "Batch No", "Expiry Date",
-        "Quantity", "Free Quantity", "Rate", "MRP", "GST %", "Amount", "HSN Code",
+        "Pack", "Quantity", "Free Qty", "MRP (₹)", "Rate (₹)",
+        "MRP (PerTab)", "Rate (PerTab)", "Discount (%)",
+        "GST %", "Tax (₹)", "Amount (₹)", "Barcode", "HSN Code",
     ]
     all_rows = [[
         filename,
-        item.get("medicine_name"), item.get("batch_no"), item.get("expiry_date"),
-        item.get("quantity"), item.get("free_quantity"), item.get("rate"),
-        item.get("mrp"), item.get("gst_percent"), item.get("amount"), item.get("hsn_code"),
+        item.get("medicine_name"), item.get("batch_no"),   item.get("expiry_date"),
+        item.get("pack"),          item.get("quantity"),    item.get("free_quantity"),
+        item.get("mrp"),           item.get("rate"),
+        item.get("mrp_per_tab"),   item.get("rate_per_tab"),item.get("discount_percent"),
+        item.get("gst_percent"),   item.get("tax_amount"),  item.get("amount"),
+        item.get("barcode"),       item.get("hsn_code"),
     ] for item in line_items]
     if all_rows:
         write_table(ws_all, all_headers, all_rows, start_row=4)
+        # Force text format on Barcode (col 17) and HSN Code (col 18) to keep leading zeros
+        for ri in range(5, 5 + len(all_rows)):
+            ws_all.cell(row=ri, column=17).number_format = "@"
+            ws_all.cell(row=ri, column=18).number_format = "@"
     else:
         ws_all.cell(row=4, column=1).value = "No items extracted."
 
@@ -118,17 +127,29 @@ def build_workbook(
     safe = "".join(c if c not in r'\/*?[]:"' else "_" for c in stem)
     ws   = wb.create_sheet(safe[:28])
     title_block(ws, f"{filename} — Line Items", subtitle=f"Rows extracted: {len(line_items)}")
-    per_headers = ["Medicine Name","Batch No","Expiry Date","Quantity","Free Quantity",
-                   "Rate","MRP","GST %","Amount","HSN Code"]
+    per_headers = [
+        "Medicine Name", "Batch No", "Expiry Date",
+        "Pack", "Quantity", "Free Qty", "MRP (₹)", "Rate (₹)",
+        "MRP (PerTab)", "Rate (PerTab)", "Discount (%)",
+        "GST %", "Tax (₹)", "Amount (₹)", "Barcode", "HSN Code",
+    ]
     per_rows = [[
-        item.get("medicine_name"), item.get("batch_no"), item.get("expiry_date"),
-        item.get("quantity"), item.get("free_quantity"), item.get("rate"),
-        item.get("mrp"), item.get("gst_percent"), item.get("amount"), item.get("hsn_code"),
+        item.get("medicine_name"), item.get("batch_no"),   item.get("expiry_date"),
+        item.get("pack"),          item.get("quantity"),    item.get("free_quantity"),
+        item.get("mrp"),           item.get("rate"),
+        item.get("mrp_per_tab"),   item.get("rate_per_tab"),item.get("discount_percent"),
+        item.get("gst_percent"),   item.get("tax_amount"),  item.get("amount"),
+        item.get("barcode"),       item.get("hsn_code"),
     ] for item in line_items]
     if per_rows:
         write_table(ws, per_headers, per_rows, start_row=4)
+        # Force text format on Barcode (col 16) and HSN Code (col 17) to keep leading zeros
+        for ri in range(5, 5 + len(per_rows)):
+            ws.cell(row=ri, column=16).number_format = "@"
+            ws.cell(row=ri, column=17).number_format = "@"
     else:
         ws.cell(row=4, column=1).value = "No items extracted."
+
 
     stream = io.BytesIO()
     wb.save(stream)
