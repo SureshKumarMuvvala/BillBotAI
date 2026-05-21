@@ -4,8 +4,10 @@
  */
 
 import React, { useState, useEffect, memo } from 'react';
-import { Layers, Database, Sparkles, Cpu, Activity } from 'lucide-react';
+import { Layers, Database, Sparkles, Cpu, Activity, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
+import { useAuth } from './context/AuthContext';
 import { usePipeline }     from './hooks/usePipeline';
 import { ErrorBoundary }   from './components/ErrorBoundary';
 import UploadPanel         from './components/UploadPanel';
@@ -60,12 +62,19 @@ const LiveClock = memo(function LiveClock() {
 
 // ── Root component ────────────────────────────────────────────────────────────
 export default function App() {
+  const { logout, requiresAuth } = useAuth();
+  const navigate = useNavigate();
   const {
     file, status, steps, isProcessing, isExcelReady, isDownloading, ocrResults, toasts,
     selectFile, clearFile, startProcessing, handleDownloadExcel, dismissToast,
   } = usePipeline();
 
   const apiPort = new URL(API_BASE_URL).port || '8000';
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <div className="min-h-screen bg-dark-950 flex font-sans relative overflow-x-hidden">
@@ -130,6 +139,17 @@ export default function App() {
                 :{apiPort}
               </span>
             </div>
+            {requiresAuth && (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 hover:text-rose-400 bg-slate-900/60 border border-slate-800 hover:border-rose-500/30 px-3 py-1.5 rounded-lg transition-colors btn-press"
+                title="Sign out"
+              >
+                <LogOut className="w-3 h-3" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            )}
           </div>
         </header>
 
