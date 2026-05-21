@@ -68,6 +68,8 @@ web_modules/
 # dotenv environment variable files
 .env
 .env.*
+backend/.env
+frontend/.env
 !.env.example
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -144,7 +146,13 @@ vite.config.ts.timestamp-*
 
 # Python Virtual Environment
 venv/
+__pycache__/
+*.pyc
 
 #Input and Output
 Excel Downloads/
 invoices/
+
+# OS
+.DS_Store
+Thumbs.db
