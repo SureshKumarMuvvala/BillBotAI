@@ -28,11 +28,11 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-from backend.services.chandra_convert  import run_convert, DatalabAPIError
-from backend.services.chandra_extract  import run_extract
-from backend.services.parser_service   import get_line_items, compute_quality_score
-from backend.services.excel_service    import build_workbook
-from backend.services.progress_service import sse_event
+from services.chandra_convert  import run_convert, DatalabAPIError
+from services.chandra_extract  import run_extract
+from services.parser_service   import get_line_items, compute_quality_score
+from services.excel_service    import build_workbook
+from services.progress_service import sse_event
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
