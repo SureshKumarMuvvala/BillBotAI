@@ -1,0 +1,95 @@
+Build a simple authentication layer for the existing React + Vite frontend.
+
+Requirements:
+
+GOAL:
+
+* protect the demo application with a login page
+* login required only in deployed environments
+* local development should automatically bypass login
+
+AUTH FLOW:
+
+* user enters username + password
+* frontend validates credentials against Vercel environment variables
+* if valid:
+
+  * store authenticated session in localStorage
+  * redirect to main app
+* if invalid:
+
+  * show error message
+
+LOCAL DEVELOPMENT:
+If running locally:
+
+* automatically bypass login
+* no login screen shown
+
+Detect local environment using:
+
+* localhost
+* import.meta.env.DEV
+
+ENV VARIABLES:
+Use Vercel environment variables:
+
+* VITE_DEMO_USERNAME
+* VITE_DEMO_PASSWORD
+
+IMPORTANT:
+
+* keep implementation SIMPLE
+* this is demo protection only
+* no JWT
+* no backend auth
+* no database
+* no OAuth
+
+ROUTES:
+
+* /login
+* /
+* unauthenticated users redirected to /login
+
+UI REQUIREMENTS:
+
+* centered login card
+* modern clean design
+* Tailwind only
+* responsive
+* logo/title section
+* username input
+* password input
+* login button
+* loading state
+* invalid credentials message
+
+CREATE:
+
+* LoginPage component
+* AuthContext or lightweight auth hook
+* ProtectedRoute component
+* auth utility functions
+
+SESSION:
+
+* persist login across refresh
+* logout button in app header
+
+LOGOUT:
+
+* clear localStorage
+* redirect to /login
+
+SECURITY:
+
+* do not expose passwords in UI
+* use environment variables only
+* do not hardcode credentials
+
+IMPORTANT:
+
+* preserve existing OCR app functionality
+* integrate cleanly into current architecture
+* minimal code changes to existing pages

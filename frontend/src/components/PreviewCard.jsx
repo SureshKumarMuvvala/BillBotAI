@@ -83,10 +83,12 @@ export default function PreviewCard({ file, onClear, status }) {
           Extracted layout with high fidelity confidence
         </div>
       )}
-      {status === 'failed' && (
-        <div className="px-3.5 py-2 bg-rose-500/5 border-t border-rose-500/10 flex items-center gap-2 text-[10px] text-rose-400/80 font-mono">
-          <AlertCircle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-          Extraction encountered errors — check API key
+        {status === 'failed' && (
+          <div className="px-3.5 py-2 bg-rose-500/5 border-t border-rose-500/10 flex items-start gap-2 text-[10px] text-rose-400/80 font-mono">
+          <AlertCircle className="w-3.5 h-3.5 text-rose-500 shrink-0 mt-0.5" />
+          <div className="break-words">
+            {file?.error || "Processing failed"}
+          </div>
         </div>
       )}
     </div>
