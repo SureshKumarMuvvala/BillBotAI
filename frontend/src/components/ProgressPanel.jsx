@@ -35,7 +35,7 @@ export default function ProgressPanel({ steps, isProcessing }) {
           </div>
           <div>
             <h2 className="text-sm font-semibold text-white tracking-tight">Pipeline Telemetry</h2>
-            <p className="text-[10px] text-slate-500 font-mono">Chandra V4 execution engine</p>
+            <p className="text-[10px] text-slate-500 font-mono">Bill Bot AI execution engine</p>
           </div>
         </div>
 

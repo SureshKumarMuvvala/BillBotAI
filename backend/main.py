@@ -162,6 +162,11 @@ async def get_progress_stream(job_id: str):
                     raise DatalabAPIError("CHANDRA_API_KEY is not configured in .env file.")
                 extract_result = await run_extract(img_bytes, filename, api_key)
                 line_items     = get_line_items(extract_result)
+                quality_score  = compute_quality_score(
+                    convert_result,
+                    extract_result=extract_result,
+                    line_items=line_items,
+                )
                 yield sse_event("extract", "completed",
                                 f"Extracted {len(line_items)} line item(s) successfully.")
             except DatalabAPIError as e:

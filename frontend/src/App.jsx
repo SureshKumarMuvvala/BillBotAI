@@ -110,7 +110,7 @@ export default function App() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-sm font-bold tracking-tight text-white">CHANDRA</h1>
+                <h1 className="text-sm font-bold tracking-tight text-white">Bill Bot AI</h1>
                 <span className="bg-cyan-500/10 text-cyan-400 text-[8px] font-mono font-bold tracking-widest px-1.5 py-0.5 rounded border border-cyan-500/20">
                   LAYOUT OCR
                 </span>
@@ -166,7 +166,7 @@ export default function App() {
         </main>
 
         <footer className="text-center text-[10px] text-slate-700 font-mono py-4 border-t border-white/[0.03]">
-          © 2026 Chandra Layout Extractor · Connected Stack V{APP_VERSION}
+          © 2026 Bill Bot AI Layout Extractor · Connected Stack V{APP_VERSION}
         </footer>
       </div>
 

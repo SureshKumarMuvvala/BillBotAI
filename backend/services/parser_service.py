@@ -289,11 +289,79 @@ def get_line_items(extract_result: dict) -> List[dict]:
     return deduped
 
 
-def compute_quality_score(convert_result: dict) -> Any:
-    """
-    Pull parse_quality_score from a convert result.
-    Returns None if convert was not run or score is absent.
-    """
-    if not convert_result:
+def _estimate_layout_score(convert_result: dict) -> float | None:
+    """Heuristic 0–5 score when Datalab leaves parse_quality_score null."""
+    if convert_result.get("status") != "complete":
         return None
-    return convert_result.get("parse_quality_score")
+
+    page_stats = (convert_result.get("metadata") or {}).get("page_stats") or []
+    blocks = sum(ps.get("num_blocks", 0) for ps in page_stats)
+    pages = max(convert_result.get("page_count") or 1, 1)
+    per_page = blocks / pages
+
+    if per_page >= 10:
+        score = 4.5
+    elif per_page >= 6:
+        score = 4.0
+    elif per_page >= 3:
+        score = 3.5
+    elif per_page >= 1:
+        score = 3.0
+    else:
+        score = 2.0
+
+    blob = json.dumps(convert_result.get("json") or "")
+    if "<table" in blob.lower():
+        score = min(5.0, score + 0.5)
+    if len(blob) > 5_000:
+        score = min(5.0, score + 0.3)
+
+    return round(score, 1)
+
+
+def _estimate_extract_score(line_items: list | None) -> float | None:
+    if not line_items:
+        return None
+    n = len(line_items)
+    if n >= 15:
+        return 5.0
+    if n >= 10:
+        return 4.8
+    if n >= 5:
+        return 4.3
+    if n >= 1:
+        return 3.8
+    return None
+
+
+def compute_quality_score(
+    convert_result: dict | None = None,
+    *,
+    extract_result: dict | None = None,
+    line_items: list | None = None,
+) -> Any:
+    """
+    Return OCR quality on a 0–5 scale.
+
+    Prefer Datalab's parse_quality_score / extraction_score_average when present.
+    Datalab currently returns null for these fields on successful jobs; in that
+    case we estimate from layout metadata (convert) and line-item yield (extract).
+    """
+    for result in (convert_result, extract_result):
+        if not result:
+            continue
+        for key in ("parse_quality_score", "extraction_score_average"):
+            api_score = result.get(key)
+            if api_score is not None:
+                return api_score
+
+    layout = _estimate_layout_score(convert_result) if convert_result else None
+    extract = _estimate_extract_score(line_items)
+
+    if layout is not None and extract is not None:
+        return round(min(5.0, layout * 0.35 + extract * 0.65), 1)
+    if extract is not None:
+        return extract
+    if layout is not None:
+        return layout
+    return None

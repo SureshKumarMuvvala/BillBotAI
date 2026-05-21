@@ -36,7 +36,7 @@ BASE_URL = "https://www.datalab.to/api/v1"
 
 # ── Config (mirrors notebook POLL_INTERVAL_SEC / TIMEOUT_SEC) ─────────────────
 CONVERT_MODE   = "accurate"
-OUTPUT_FORMAT  = "json"
+OUTPUT_FORMAT  = "markdown,json"
 POLL_INTERVAL  = 3      # seconds
 TIMEOUT_SEC    = 180    # max wait
 

@@ -1,0 +1,331 @@
+```text
+Refactor the entire frontend UI theme for the Chandra OCR Pharmacy Invoice Extraction application to a more premium, enterprise-grade AI SaaS appearance.
+
+Current UI feels overly neon/cyberpunk and AI-generated. 
+Goal is to make it feel:
+- modern
+- premium
+- clean
+- production-ready
+- enterprise AI platform
+- similar quality to Linear, Vercel, OpenAI, Stripe dashboards
+
+Keep the current layout structure, but redesign the visual system completely.
+
+==================================================
+DESIGN DIRECTION
+==================================================
+
+Style:
+- Premium dark mode
+- Minimal AI SaaS aesthetic
+- Subtle gradients
+- Clean spacing
+- Soft shadows
+- Reduced neon glow
+- Better typography hierarchy
+- High readability
+- Professional telemetry dashboard
+
+Avoid:
+- excessive cyan glow
+- gaming UI feel
+- overly futuristic effects
+- heavy borders
+- bright saturated backgrounds
+
+==================================================
+COLOR SYSTEM (RECOMMENDED)
+==================================================
+
+Use this exact palette:
+
+Background:
+#070B14
+
+Secondary Background:
+#0B1120
+
+Card Background:
+#111827
+
+Elevated Surface:
+#1F2937
+
+Primary Accent:
+#06B6D4
+
+Secondary Accent:
+#8B5CF6
+
+Success:
+#10B981
+
+Warning:
+#F59E0B
+
+Danger:
+#EF4444
+
+Primary Text:
+#F8FAFC
+
+Secondary Text:
+#94A3B8
+
+Muted Text:
+#64748B
+
+Borders:
+rgba(255,255,255,0.08)
+
+Hover Background:
+rgba(255,255,255,0.04)
+
+Active Background:
+rgba(6,182,212,0.08)
+
+==================================================
+GLOBAL UI IMPROVEMENTS
+==================================================
+
+Apply these improvements globally:
+
+- Replace hard neon glows with soft shadows
+- Increase contrast between background and cards
+- Add subtle card elevation
+- Use cleaner spacing and padding
+- Improve section hierarchy
+- Make typography more readable
+- Use softer borders
+- Improve hover states
+- Add smooth transitions
+
+Use:
+- border-radius: 16px to 24px
+- soft shadows
+- backdrop blur only where useful
+- subtle gradients only
+
+==================================================
+TYPOGRAPHY
+==================================================
+
+Use:
+- Inter
+OR
+- Geist
+
+Typography hierarchy:
+
+Page Title:
+- 28px
+- font-weight 700
+
+Section Headers:
+- 20px
+- font-weight 600
+
+Labels:
+- 13px
+- medium weight
+
+Body:
+- 14px to 15px
+
+Muted telemetry text:
+- lower opacity
+- slate colors
+
+Improve line-height and spacing.
+
+==================================================
+TOP NAVBAR
+==================================================
+
+Redesign navbar with:
+- subtle dark gradient
+- better spacing
+- cleaner logo alignment
+- softer badges
+
+Navbar gradient:
+
+background: linear-gradient(
+  90deg,
+  #0F172A,
+  #111827
+);
+
+Status badges:
+- softer pill design
+- subtle border
+- no heavy glow
+
+==================================================
+CARDS / PANELS
+==================================================
+
+All panels should use:
+
+background: #111827;
+border: 1px solid rgba(255,255,255,0.08);
+
+box-shadow:
+0 4px 20px rgba(0,0,0,0.35);
+
+Border radius:
+20px
+
+Improve visual separation between:
+- upload panel
+- telemetry panel
+- preview sections
+
+==================================================
+UPLOAD AREA
+==================================================
+
+Redesign upload zone:
+- cleaner dashed border
+- subtle hover animation
+- centered layout
+- slightly brighter interaction state
+
+Use:
+
+border: 2px dashed rgba(148,163,184,0.25);
+
+Hover:
+border-color: #06B6D4;
+background: rgba(6,182,212,0.05);
+
+==================================================
+BUTTONS
+==================================================
+
+Primary Button:
+- cyan accent
+- subtle hover lift
+- no excessive glow
+
+Primary Button:
+background: #06B6D4;
+color: white;
+
+Hover:
+background: #0891B2;
+
+Secondary Button:
+background: rgba(255,255,255,0.04);
+
+Disabled Button:
+- reduced opacity
+- muted appearance
+
+==================================================
+PIPELINE TELEMETRY PANEL
+==================================================
+
+Improve pipeline visualization significantly.
+
+Current telemetry area feels empty.
+
+Add:
+- better step indicators
+- active step highlight
+- completion states
+- animated progress line
+- cleaner spacing
+
+Active step styling:
+- left cyan accent border
+- subtle cyan background
+
+Completed step:
+- green success icon
+
+Pending step:
+- muted gray
+
+==================================================
+ADD LIVE METRICS PANEL
+==================================================
+
+Inside telemetry section add small metric cards:
+
+- OCR Confidence
+- Tables Detected
+- Rows Extracted
+- Processing Time
+- Extraction Accuracy
+
+Each metric card should:
+- use compact card design
+- have subtle icon
+- use elevated surface color
+
+==================================================
+TABLE DESIGN
+==================================================
+
+Refactor extracted data table:
+
+Columns:
+- sticky headers
+- alternating row backgrounds
+- better spacing
+- improved readability
+- subtle hover state
+
+Header:
+background: #1F2937;
+
+Rows hover:
+background: rgba(255,255,255,0.03);
+
+Numeric columns:
+- right aligned
+
+==================================================
+ANIMATIONS
+==================================================
+
+Add subtle animations only:
+- fade in
+- hover elevation
+- progress transitions
+- button hover
+- telemetry step updates
+
+Avoid:
+- flashy effects
+- strong glow pulses
+
+==================================================
+RESPONSIVE DESIGN
+==================================================
+
+Ensure:
+- works on laptop screens
+- telemetry stacks properly
+- upload area scales correctly
+- tables support horizontal scrolling
+
+==================================================
+FINAL OBJECTIVE
+==================================================
+
+The UI should feel like:
+- a funded AI startup product
+- enterprise OCR platform
+- premium SaaS dashboard
+- production-ready AI extraction system
+
+NOT:
+- cyberpunk template
+- gaming dashboard
+- overly AI-generated mockup
+
+Maintain the existing functionality while upgrading the entire visual design system consistently.
+```

@@ -121,7 +121,7 @@ export default function UploadPanel({
         >
           {isProcessing
             ? <><Loader2 className="w-4 h-4 animate-spin" /> EXTRACTING…</>
-            : <><Zap className="w-4 h-4" /> START CHANDRA EXTRACTION</>
+            : <><Zap className="w-4 h-4" /> START BILL BOT AI EXTRACTION</>
           }
         </button>
 
